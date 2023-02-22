@@ -1,10 +1,29 @@
 import React, { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { getUsers } from '../api/users';
 
 function Home() {
   const [targetId, setTargetId] = useState("");
   const [targetPw, setTargetPw] = useState("");
+
+  const { isLoading, isError, data } = useQuery("Users", getUsers)
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation(getUsers, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("Users")
+    }
+  })
+
+  // 로딩, 에러가 났을 때
+  if (isLoading) {
+    return <h1>로딩중입니다...</h1>
+  }
+  if (isError) {
+    return <h1>오류가 발생했습니다...</h1>
+  }
 
   const onChangeTargetId = (e) => {
     setTargetId(e.target.value)
@@ -12,9 +31,22 @@ function Home() {
 
   const onChangeTargetPw = (e) => {
     setTargetPw(e.target.value)
-  }  
+  }
   const onSubmit = (e) => {
     e.preventDefault();
+  }
+
+  const user = data.find((user) => user.targetId === targetId)
+
+  console.log(user)
+
+  // 로그인 버튼 눌렀을 때
+  const loginButton = () => {
+    if (!user || user.targetPw !== targetPw) {
+      alert("아이디 또는 비밀번호가 일치하지 않습니다")
+    } else {
+      alert("로그인 완료!")
+    }
   }
 
   return (
@@ -40,7 +72,7 @@ function Home() {
               autoComplete="off"
             />
             <div>
-              <StBtn>로그인</StBtn>
+              <StBtn onClick={loginButton}>로그인</StBtn>
             </div>
           </form>
         </div>
