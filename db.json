@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "targetId": "안녕",
+      "targetPw": "1234",
+      "id": 1
+    },
+    {
+      "targetId": "테스트",
+      "targetPw": "1234",
+      "id": 2
+    },
+    {
+      "targetId": "테스트2",
+      "targetPw": "1234",
+      "id": 3
+    }
+  ]
+}
